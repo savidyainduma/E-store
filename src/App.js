@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Category from './Components/Category';
+
 
 function App() {
 
@@ -15,17 +17,28 @@ function App() {
     })
   }, []) 
 
+  const handleCategoryClick = id => {
+    fetch("http://localhost:3001/products?catId="+id)
+    .then(response => response.json())
+    .then(data =>{
+      console.log(data);
+      setResults(data)
+    })
+  }
+
+  const renderCategories = () => {
+    return results.map(c => 
+      <Category key={c.id} id={c.id} title={c.title} onCategoryClick={() => handleCategoryClick(c.id)}/>
+      );
+  };
+
   return (
     <>
       <header>My Store</header>
 
       <section>
         <nav>
-        {
-        results.map(d => (
-          <div key={d.id}>{d.title}</div>
-        ))
-      }
+          {results &&  renderCategories()}
         </nav>
         <article>
           Main Area
